@@ -25,10 +25,18 @@ public class RedeRelacionamento {
 		return person.selectBy(this.listUsuarios, email, senha);
 	}
 	
-	public void setList(ArrayList<T> t) {
-		this.t = t;
-	}	
-	
+	public void setListUsuarios(ArrayList<Usuario> listUsuarios) {
+		this.listUsuarios = listUsuarios;
+	}
+
+	public void setListComunidades(ArrayList<Comunidade> listComunidades) {
+		this.listComunidades = listComunidades;
+	}
+
+	public void setListUsuariosRemovidos(ArrayList<Usuario> listUsuariosRemovidos) {
+		this.listUsuariosRemovidos = listUsuariosRemovidos;
+	}
+
 	public ArrayList<Usuario> getListUsuariosRemovidos() {
 		return listUsuariosRemovidos;
 	}
@@ -57,20 +65,10 @@ public class RedeRelacionamento {
 		this.listUsuarios.remove(usuario);
 		this.listUsuariosRemovidos.add(usuario);
 		
-		PersonFinder person = new PersonFinder();
-		Usuario user = 
-				person.selectBy(this.listUsuarios, usuario.getEmail(), usuario.getSenha());
-		
-		if(notIsNull(user)){
-			user.getListUser().remove(usuario);
-			
-			
-		}
-		
 		for(Usuario iterator : this.listUsuarios){
 			if(iterator.getListUser().contains(usuario)){
 				
-				iterator.
+				iterator.getListUser().remove(usuario);
 				
 				
 				for(Mensagem mensagem : iterator.getListMensagens()){
@@ -81,8 +79,8 @@ public class RedeRelacionamento {
 		}
 		
 		for(Comunidade comunidade : this.listComunidades){
-			if(comunidade.getListParticipantes().contains(usuario))
-				comunidade.getListParticipantes().remove(usuario);
+			if(comunidade.getListUser().contains(usuario))
+				comunidade.getListUser().remove(usuario);
 		}
 		
 		return true;
@@ -96,13 +94,13 @@ public class RedeRelacionamento {
 					this.listUsuariosRemovidos.remove(usuario);
 					
 					for(Usuario iterator : this.listUsuarios){
-						if(usuario.getListAmigos().contains(iterator))
-							iterator.getListAmigos().add(usuario);
+						if(usuario.getListUser().contains(iterator))
+							iterator.getListUser().add(usuario);
 					}
 					
 					for(Comunidade iterator : this.listComunidades){
 						if(usuario.getListComunidades().contains(iterator))
-							iterator.getListParticipantes().add(usuario);
+							iterator.getListUser().add(usuario);
 					}
 					
 					return true;
